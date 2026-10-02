@@ -1,0 +1,46 @@
+table dim_temps
+	lineageTag: 646af643-7460-49d6-870b-a4ff021b459b
+	dataCategory: Time
+
+	column cle_temps
+		dataType: int64
+		lineageTag: db7868f0-518b-44df-9b23-16294f227720
+		sourceColumn: cle_temps
+
+	column date
+		dataType: dateTime
+		isUnique
+		formatString: dd/MM/yyyy
+		lineageTag: 5829ca22-0a9a-43e6-b367-3ea6bc1df003
+		sourceColumn: date
+
+	column annee
+		dataType: int64
+		lineageTag: 55b5627e-2deb-4055-8e4c-e7621de587e9
+		sourceColumn: annee
+
+	column trimestre
+		dataType: int64
+		lineageTag: f65088c2-b398-4b88-ad52-79a51a9a988a
+		sourceColumn: trimestre
+
+	column mois
+		dataType: int64
+		lineageTag: c3bcdec4-58bd-4e8d-8a69-1aa4051b8c5d
+		sourceColumn: mois
+
+	column jour_semaine
+		dataType: int64
+		lineageTag: 98182ae9-1241-4a29-b5ce-d9426f94f657
+		sourceColumn: jour_semaine
+
+	partition dim_temps = m
+		mode: import
+		source =
+				let
+				    Source = Csv.Document(File.Contents("C:/Users/Lenovo/Desktop/PowerBi/Projet_Solaris/datamart/dim_temps.csv"), [Delimiter=";", Encoding=65001, QuoteStyle=QuoteStyle.Csv]),
+				    Promoted = Table.PromoteHeaders(Source, [PromoteAllScalars=true]),
+				    Typed = Table.TransformColumnTypes(Promoted, {{"cle_temps", Int64.Type}, {"date", type date}, {"annee", Int64.Type}, {"trimestre", Int64.Type}, {"mois", Int64.Type}, {"jour_semaine", Int64.Type}}, "fr-FR")
+				in
+				    Typed
+

@@ -1,0 +1,33 @@
+table dim_type_local
+	lineageTag: 77446b97-c0b0-4e65-918f-963a078f814d
+
+	column cle_type_local
+		dataType: string
+		lineageTag: 2014141f-811f-429b-bd93-764a149cdcfb
+		sourceColumn: cle_type_local
+
+	column code_type_local
+		dataType: string
+		lineageTag: 8e02eada-a5b0-4a73-82da-69813d9df65b
+		sourceColumn: code_type_local
+
+	column type_local
+		dataType: string
+		lineageTag: 3678681f-78fd-40cb-a417-695661adf0ac
+		sourceColumn: type_local
+
+	column cle_categorie_local
+		dataType: string
+		lineageTag: 046bfd25-3e2e-4dcb-b1b0-60b51c73f388
+		sourceColumn: cle_categorie_local
+
+	partition dim_type_local = m
+		mode: import
+		source =
+				let
+				    Source = Csv.Document(File.Contents("C:/Users/Lenovo/Desktop/PowerBi/Projet_Solaris/datamart/dim_type_local.csv"), [Delimiter=";", Encoding=65001, QuoteStyle=QuoteStyle.Csv]),
+				    Promoted = Table.PromoteHeaders(Source, [PromoteAllScalars=true]),
+				    Typed = Table.TransformColumnTypes(Promoted, {{"cle_type_local", type text}, {"code_type_local", type text}, {"type_local", type text}, {"cle_categorie_local", type text}}, "fr-FR")
+				in
+				    Typed
+

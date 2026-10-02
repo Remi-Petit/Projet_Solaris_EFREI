@@ -1,0 +1,23 @@
+table dim_nature_mutation
+	lineageTag: 6fa59f18-4da3-4c04-a3b1-585bc1f54b68
+
+	column cle_nature_mutation
+		dataType: string
+		lineageTag: d7ec6a81-f930-4442-be9d-7a926bf81a70
+		sourceColumn: cle_nature_mutation
+
+	column nature_mutation
+		dataType: string
+		lineageTag: d299c8b0-4c49-4e1e-b73b-19d756178603
+		sourceColumn: nature_mutation
+
+	partition dim_nature_mutation = m
+		mode: import
+		source =
+				let
+				    Source = Csv.Document(File.Contents("C:/Users/Lenovo/Desktop/PowerBi/Projet_Solaris/datamart/dim_nature_mutation.csv"), [Delimiter=";", Encoding=65001, QuoteStyle=QuoteStyle.Csv]),
+				    Promoted = Table.PromoteHeaders(Source, [PromoteAllScalars=true]),
+				    Typed = Table.TransformColumnTypes(Promoted, {{"cle_nature_mutation", type text}, {"nature_mutation", type text}}, "fr-FR")
+				in
+				    Typed
+

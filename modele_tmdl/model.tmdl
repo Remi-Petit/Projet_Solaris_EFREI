@@ -1,0 +1,24 @@
+model Model
+	culture: fr-FR
+	defaultPowerBIDataSourceVersion: powerBI_V3
+	sourceQueryCulture: fr-FR
+	valueFilterBehavior: independent
+	dataAccessOptions
+		legacyRedirects
+		returnErrorValuesAsNull
+
+annotation __PBI_TimeIntelligenceEnabled = 1
+
+annotation PBI_ProTooling = ["MCP-PBIModeling"]
+
+ref table dim_categorie_local
+ref table dim_departement
+ref table dim_nature_culture
+ref table dim_nature_mutation
+ref table dim_type_local
+ref table dim_commune
+ref table dim_temps
+ref table fait_mutation
+
+ref cultureInfo fr-FR
+

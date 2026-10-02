@@ -1,0 +1,28 @@
+relationship FK_fait_mutation_dim_temps
+	fromColumn: fait_mutation.cle_temps
+	toColumn: dim_temps.cle_temps
+
+relationship FK_fait_mutation_dim_commune
+	fromColumn: fait_mutation.cle_commune
+	toColumn: dim_commune.cle_commune
+
+relationship FK_fait_mutation_dim_nature_mutation
+	fromColumn: fait_mutation.cle_nature_mutation
+	toColumn: dim_nature_mutation.cle_nature_mutation
+
+relationship FK_fait_mutation_dim_type_local
+	fromColumn: fait_mutation.cle_type_local
+	toColumn: dim_type_local.cle_type_local
+
+relationship FK_fait_mutation_dim_nature_culture
+	fromColumn: fait_mutation.cle_nature_culture
+	toColumn: dim_nature_culture.cle_nature_culture
+
+relationship FK_dim_commune_dim_departement
+	fromColumn: dim_commune.code_departement
+	toColumn: dim_departement.cle_departement
+
+relationship FK_dim_type_local_dim_categorie_local
+	fromColumn: dim_type_local.cle_categorie_local
+	toColumn: dim_categorie_local.cle_categorie_local
+

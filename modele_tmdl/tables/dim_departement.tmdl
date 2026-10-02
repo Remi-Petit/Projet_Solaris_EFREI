@@ -1,0 +1,23 @@
+table dim_departement
+	lineageTag: 53753e88-a69b-4a15-9397-86471b1bbcea
+
+	column cle_departement
+		dataType: string
+		lineageTag: e2f9ff28-3b4d-4786-bc38-80bff301492b
+		sourceColumn: cle_departement
+
+	column code_departement
+		dataType: string
+		lineageTag: ac288b4e-6158-4bb7-bbc6-1fbf79528234
+		sourceColumn: code_departement
+
+	partition dim_departement = m
+		mode: import
+		source =
+				let
+				    Source = Csv.Document(File.Contents("C:/Users/Lenovo/Desktop/PowerBi/Projet_Solaris/datamart/dim_departement.csv"), [Delimiter=";", Encoding=65001, QuoteStyle=QuoteStyle.Csv]),
+				    Promoted = Table.PromoteHeaders(Source, [PromoteAllScalars=true]),
+				    Typed = Table.TransformColumnTypes(Promoted, {{"cle_departement", type text}, {"code_departement", type text}}, "fr-FR")
+				in
+				    Typed
+

@@ -1,0 +1,33 @@
+table dim_nature_culture
+	lineageTag: 016d8f2f-6bbb-4263-bbd8-2ee94888e055
+
+	column cle_nature_culture
+		dataType: string
+		lineageTag: 30629fff-532f-45c9-98e5-d966d50e483c
+		sourceColumn: cle_nature_culture
+
+	column code_nature_culture
+		dataType: string
+		lineageTag: 5a86ff4d-860e-42cc-91c6-812e259f6b5f
+		sourceColumn: code_nature_culture
+
+	column nature_culture
+		dataType: string
+		lineageTag: 235b3a31-2c47-44f3-b76a-7bcf3f9e5654
+		sourceColumn: nature_culture
+
+	column nature_culture_speciale
+		dataType: string
+		lineageTag: 54cde2ad-5d1f-4fa8-b297-348dff508df9
+		sourceColumn: nature_culture_speciale
+
+	partition dim_nature_culture = m
+		mode: import
+		source =
+				let
+				    Source = Csv.Document(File.Contents("C:/Users/Lenovo/Desktop/PowerBi/Projet_Solaris/datamart/dim_nature_culture.csv"), [Delimiter=";", Encoding=65001, QuoteStyle=QuoteStyle.Csv]),
+				    Promoted = Table.PromoteHeaders(Source, [PromoteAllScalars=true]),
+				    Typed = Table.TransformColumnTypes(Promoted, {{"cle_nature_culture", type text}, {"code_nature_culture", type text}, {"nature_culture", type text}, {"nature_culture_speciale", type text}}, "fr-FR")
+				in
+				    Typed
+

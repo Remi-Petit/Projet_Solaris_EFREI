@@ -1,0 +1,43 @@
+Consignes pour le projet Business Intelligence
+Chaque groupe doit réaliser un projet décisionnel avec Power Query et Power BI. Voici les étapes à 
+suivre :
+• Choisir une source de données et me la soumettre pour approbation 
+• Définir un besoin analytique et le modèle en flocon du datamart correspondant
+• Implémenter avec Power Query 
+• Déclarer le modèle en flocon dans Power BI
+• Réaliser dans Power BI un tableau croisé (matrice) correspondant au besoin analytique 
+Données source 
+Vos données source peuvent être de 
+n'importe quel format utilisable, par exemple 
+un fichier Excel ou une série de fichiers .CSV.
+• Vous pouvez utiliser des données fictives.
+• Il doit y avoir au moins 100 lignes de 
+données 
+• Il doit y avoir au moins 4 dimensions 
+et 2 mesures 
+Transformations 
+Votre projet doit comporter au moins trois des 
+transformations suivantes. Ces 
+transformations doivent être logiques par 
+rapport à votre flocon.
+• Déplacement de colonne(s) d'une table à 
+l'autre / séparation de données d'une table 
+en deux ou plusieurs tables 
+• Une ou plusieurs colonnes calculée(s)
+• Modification de clef
+• Dédoublonnage 
+• Agrégation 
+Dates limites 
+• Le mercredi 7 octobre au plus tard : 
+proposition de données source 
+• Le samedi 17 octobre au plus tard : remise 
+finale du projet
+Votre remise finale doit comporter les éléments suivants : 
+• Descriptif de votre cas métier et du type d'analyses que votre datamart doit permettre 
+• Justification de vos transformations 
+• Données source, dans le format utilisé par le projet Power Query 
+• Fichier .pbix comportant l'ensemble du projet
+Architecture 
+Vous devez obligatoirement avoir une table de 
+faits détaillée (datawarehouse) et une table de 
+faits agrégée (datamart).

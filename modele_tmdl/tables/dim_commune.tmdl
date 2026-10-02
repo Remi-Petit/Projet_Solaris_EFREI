@@ -1,0 +1,40 @@
+table dim_commune
+	lineageTag: 4dfccc1e-5754-49b2-87a3-0bce519a2686
+
+	column cle_commune
+		dataType: string
+		lineageTag: f2dd33d7-8995-4c10-be12-c5f43a1bce24
+		sourceColumn: cle_commune
+
+	column code_departement
+		dataType: string
+		lineageTag: 50938d53-9e54-4f8c-95ad-4a2c5469caa0
+		sourceColumn: code_departement
+
+	column code_commune
+		dataType: string
+		lineageTag: a8e48977-eea4-4e2d-bde3-9b3d06061701
+		sourceColumn: code_commune
+
+	column commune
+		dataType: string
+		lineageTag: 0282b162-2cc7-45d4-b6e4-2c6394d1b0fa
+		sourceColumn: commune
+
+	column code_postal
+		dataType: string
+		lineageTag: a98a84ac-d211-450d-a29f-bedc14b6ef3b
+		dataCategory: PostalCode
+		summarizeBy: none
+		sourceColumn: code_postal
+
+	partition dim_commune = m
+		mode: import
+		source =
+				let
+				    Source = Csv.Document(File.Contents("C:/Users/Lenovo/Desktop/PowerBi/Projet_Solaris/datamart/dim_commune.csv"), [Delimiter=";", Encoding=65001, QuoteStyle=QuoteStyle.Csv]),
+				    Promoted = Table.PromoteHeaders(Source, [PromoteAllScalars=true]),
+				    Typed = Table.TransformColumnTypes(Promoted, {{"cle_commune", type text}, {"code_departement", type text}, {"code_commune", type text}, {"commune", type text}, {"code_postal", type text}}, "fr-FR")
+				in
+				    Typed
+

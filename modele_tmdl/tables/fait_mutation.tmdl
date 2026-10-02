@@ -1,0 +1,128 @@
+table fait_mutation
+	lineageTag: 1e4d95fe-bfb5-487e-a967-16ab4a3f9b4f
+
+	/// Nombre de mutations distinctes
+	measure 'Nombre de mutations' = DISTINCTCOUNT(fait_mutation[cle_mutation])
+		formatString: #,##0
+		lineageTag: 1dd4ce88-490d-4aa2-a5b6-a64d7d55e881
+
+	/// Somme des valeurs foncieres
+	measure 'Valeur fonciere totale' = SUM(fait_mutation[valeur_fonciere])
+		formatString: #,##0 €
+		lineageTag: 2d820733-05a0-4b54-8ce2-7a1b7bd68c99
+
+	/// Valeur fonciere moyenne par mutation
+	measure 'Valeur fonciere moyenne' = DIVIDE([Valeur fonciere totale], [Nombre de mutations])
+		formatString: #,##0 €
+		lineageTag: bded7159-6c99-4195-8cfe-2fa50519e1d4
+
+	/// Surface batie totale
+	measure 'Surface batie totale' = SUM(fait_mutation[surface_reelle_bati])
+		formatString: #,##0.00
+		lineageTag: 39b3a56c-ec7b-4fda-9646-e0e652cd6835
+
+	/// Prix moyen au m2 (valeur fonciere / surface batie)
+	measure 'Prix moyen m2' = DIVIDE([Valeur fonciere totale], [Surface batie totale])
+		formatString: #,##0.00 €
+		lineageTag: dd253689-7ee8-4a05-8417-923cf39fae12
+
+	/// Surface de terrain totale
+	measure 'Surface terrain totale' = SUM(fait_mutation[surface_terrain])
+		formatString: #,##0.00
+		lineageTag: 2c76d27a-111f-4bc8-91e3-50455fd3ecde
+
+	/// Nombre de locaux (lignes de la table de faits)
+	measure 'Nombre de locaux' = COUNTROWS(fait_mutation)
+		formatString: #,##0
+		lineageTag: 7f6e4736-21d7-412e-88ea-ac830fa0ef22
+
+	column cle_mutation
+		dataType: int64
+		lineageTag: 365cbab2-8646-4d99-a902-742b1d3770e4
+		sourceColumn: cle_mutation
+
+	column cle_temps
+		dataType: int64
+		lineageTag: 404025d5-2971-44c3-829d-23fabd2c67ed
+		sourceColumn: cle_temps
+
+	column cle_commune
+		dataType: string
+		lineageTag: 57052340-b49d-495e-8064-c737afcdd458
+		sourceColumn: cle_commune
+
+	column cle_nature_mutation
+		dataType: string
+		lineageTag: 4f79172b-b85e-4d1f-b53a-e8971e3530ec
+		sourceColumn: cle_nature_mutation
+
+	column cle_type_local
+		dataType: string
+		lineageTag: 1a70aec4-e7fb-4483-a0f0-b37243839b04
+		sourceColumn: cle_type_local
+
+	column cle_nature_culture
+		dataType: string
+		lineageTag: 76b2b4d8-636e-48cf-b376-df495f7a3818
+		sourceColumn: cle_nature_culture
+
+	column no_voie
+		dataType: string
+		lineageTag: 89354f88-faa4-4955-b76a-f3aa44c7bca0
+		sourceColumn: no_voie
+
+	column btq
+		dataType: string
+		lineageTag: 9788d4a6-f7e4-47a0-8552-7052668d8b94
+		sourceColumn: btq
+
+	column code_voie
+		dataType: string
+		lineageTag: cf0a66c2-76ef-43c3-92e2-f65bed37fad0
+		sourceColumn: code_voie
+
+	column identifiant_local
+		dataType: string
+		lineageTag: 8280b94e-b1f2-4e81-882e-7956c63ac61f
+		sourceColumn: identifiant_local
+
+	column valeur_fonciere
+		dataType: double
+		formatString: #,##0 €
+		lineageTag: 033185a5-d838-460b-a1bf-6936ee12ed40
+		sourceColumn: valeur_fonciere
+
+	column surface_reelle_bati
+		dataType: double
+		formatString: #,##0.00
+		lineageTag: d12fecf2-2943-4b19-8e99-763547815269
+		sourceColumn: surface_reelle_bati
+
+	column nombre_pieces_principales
+		dataType: int64
+		formatString: #,##0
+		lineageTag: 150561a2-34ff-4f3c-ac92-50e9b10a1024
+		sourceColumn: nombre_pieces_principales
+
+	column surface_terrain
+		dataType: double
+		formatString: #,##0.00
+		lineageTag: 7b752231-0f00-42d1-8d61-f945bfbab175
+		sourceColumn: surface_terrain
+
+	column nombre_lots
+		dataType: int64
+		formatString: #,##0
+		lineageTag: 7d207801-6355-4232-be7b-196a65cee80c
+		sourceColumn: nombre_lots
+
+	partition fait_mutation = m
+		mode: import
+		source =
+				let
+				    Source = Csv.Document(File.Contents("C:/Users/Lenovo/Desktop/PowerBi/Projet_Solaris/datamart/fait_mutation.csv"), [Delimiter=";", Encoding=65001, QuoteStyle=QuoteStyle.Csv]),
+				    Promoted = Table.PromoteHeaders(Source, [PromoteAllScalars=true]),
+				    Typed = Table.TransformColumnTypes(Promoted, {{"cle_mutation", Int64.Type}, {"cle_temps", Int64.Type}, {"cle_commune", type text}, {"cle_nature_mutation", type text}, {"cle_type_local", type text}, {"cle_nature_culture", type text}, {"no_voie", type text}, {"btq", type text}, {"code_voie", type text}, {"identifiant_local", type text}, {"valeur_fonciere", type number}, {"surface_reelle_bati", type number}, {"nombre_pieces_principales", Int64.Type}, {"surface_terrain", type number}, {"nombre_lots", Int64.Type}}, "fr-FR")
+				in
+				    Typed
+
