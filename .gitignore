@@ -1,0 +1,12 @@
+# Environnement virtuel Python
+.venv/
+venv/
+
+# Cache Python
+__pycache__/
+*.py[cod]
+
+# Données volumineuses : GitHub refuse tout fichier > 100 Mo
+# (le fichier source DVF et la table de faits générée dépassent cette limite)
+ValeursFoncieres-2025.txt
+datamart/fait_mutation.csv
