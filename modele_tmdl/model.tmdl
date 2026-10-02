@@ -19,6 +19,7 @@ ref table dim_type_local
 ref table dim_commune
 ref table dim_temps
 ref table fait_mutation
+ref table fait_marche_agrege
 
 ref cultureInfo fr-FR
 

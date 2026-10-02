@@ -6,8 +6,12 @@ table fait_mutation
 		formatString: #,##0
 		lineageTag: 1dd4ce88-490d-4aa2-a5b6-a64d7d55e881
 
-	/// Somme des valeurs foncieres
-	measure 'Valeur fonciere totale' = SUM(fait_mutation[valeur_fonciere])
+	/// Somme des valeurs foncieres des mutations (chaque mutation comptee une seule fois)
+	measure 'Valeur fonciere totale' =
+			SUMX(
+			    VALUES(fait_mutation[cle_mutation]),
+			    CALCULATE(AVERAGE(fait_mutation[valeur_fonciere]))
+			)
 		formatString: #,##0 €
 		lineageTag: 2d820733-05a0-4b54-8ce2-7a1b7bd68c99
 
@@ -37,7 +41,7 @@ table fait_mutation
 		lineageTag: 7f6e4736-21d7-412e-88ea-ac830fa0ef22
 
 	column cle_mutation
-		dataType: int64
+		dataType: string
 		lineageTag: 365cbab2-8646-4d99-a902-742b1d3770e4
 		sourceColumn: cle_mutation
 
@@ -120,9 +124,7 @@ table fait_mutation
 		mode: import
 		source =
 				let
-				    Source = Csv.Document(File.Contents("C:/Users/Lenovo/Desktop/PowerBi/Projet_Solaris/datamart/fait_mutation.csv"), [Delimiter=";", Encoding=65001, QuoteStyle=QuoteStyle.Csv]),
-				    Promoted = Table.PromoteHeaders(Source, [PromoteAllScalars=true]),
-				    Typed = Table.TransformColumnTypes(Promoted, {{"cle_mutation", Int64.Type}, {"cle_temps", Int64.Type}, {"cle_commune", type text}, {"cle_nature_mutation", type text}, {"cle_type_local", type text}, {"cle_nature_culture", type text}, {"no_voie", type text}, {"btq", type text}, {"code_voie", type text}, {"identifiant_local", type text}, {"valeur_fonciere", type number}, {"surface_reelle_bati", type number}, {"nombre_pieces_principales", Int64.Type}, {"surface_terrain", type number}, {"nombre_lots", Int64.Type}}, "fr-FR")
+				    Source = q_fait_mutation
 				in
-				    Typed
+				    Source
 

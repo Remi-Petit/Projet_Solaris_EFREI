@@ -38,9 +38,7 @@ table dim_temps
 		mode: import
 		source =
 				let
-				    Source = Csv.Document(File.Contents("C:/Users/Lenovo/Desktop/PowerBi/Projet_Solaris/datamart/dim_temps.csv"), [Delimiter=";", Encoding=65001, QuoteStyle=QuoteStyle.Csv]),
-				    Promoted = Table.PromoteHeaders(Source, [PromoteAllScalars=true]),
-				    Typed = Table.TransformColumnTypes(Promoted, {{"cle_temps", Int64.Type}, {"date", type date}, {"annee", Int64.Type}, {"trimestre", Int64.Type}, {"mois", Int64.Type}, {"jour_semaine", Int64.Type}}, "fr-FR")
+				    Source = q_dim_temps
 				in
-				    Typed
+				    Source
 

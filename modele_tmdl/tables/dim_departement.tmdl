@@ -15,9 +15,7 @@ table dim_departement
 		mode: import
 		source =
 				let
-				    Source = Csv.Document(File.Contents("C:/Users/Lenovo/Desktop/PowerBi/Projet_Solaris/datamart/dim_departement.csv"), [Delimiter=";", Encoding=65001, QuoteStyle=QuoteStyle.Csv]),
-				    Promoted = Table.PromoteHeaders(Source, [PromoteAllScalars=true]),
-				    Typed = Table.TransformColumnTypes(Promoted, {{"cle_departement", type text}, {"code_departement", type text}}, "fr-FR")
+				    Source = q_dim_departement
 				in
-				    Typed
+				    Source
 

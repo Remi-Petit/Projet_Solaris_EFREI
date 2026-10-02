@@ -15,9 +15,7 @@ table dim_categorie_local
 		mode: import
 		source =
 				let
-				    Source = Csv.Document(File.Contents("C:/Users/Lenovo/Desktop/PowerBi/Projet_Solaris/datamart/dim_categorie_local.csv"), [Delimiter=";", Encoding=65001, QuoteStyle=QuoteStyle.Csv]),
-				    Promoted = Table.PromoteHeaders(Source, [PromoteAllScalars=true]),
-				    Typed = Table.TransformColumnTypes(Promoted, {{"cle_categorie_local", type text}, {"categorie_local", type text}}, "fr-FR")
+				    Source = q_dim_categorie_local
 				in
-				    Typed
+				    Source
 
