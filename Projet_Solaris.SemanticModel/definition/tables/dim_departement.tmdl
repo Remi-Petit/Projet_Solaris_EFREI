@@ -11,6 +11,16 @@ table dim_departement
 		lineageTag: ac288b4e-6158-4bb7-bbc6-1fbf79528234
 		sourceColumn: code_departement
 
+	column nom_departement
+		dataType: string
+		lineageTag: 8a17d5c3-4e92-4f68-b7d1-2c6e93a05f47
+		sourceColumn: nom_departement
+
+	column cle_region
+		dataType: string
+		lineageTag: 5f2b8e14-9d37-4a6c-8e05-71b4d2f83c9a
+		sourceColumn: cle_region
+
 	partition dim_departement = m
 		mode: import
 		source =

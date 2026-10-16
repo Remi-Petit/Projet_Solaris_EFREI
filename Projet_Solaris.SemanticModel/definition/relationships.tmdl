@@ -38,3 +38,7 @@ relationship FK_agrege_dim_nature_mutation
 	fromColumn: fait_marche_agrege.cle_nature_mutation
 	toColumn: dim_nature_mutation.cle_nature_mutation
 
+relationship FK_dim_departement_dim_region
+	fromColumn: dim_departement.cle_region
+	toColumn: dim_region.cle_region
+

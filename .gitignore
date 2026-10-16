@@ -8,7 +8,7 @@ __pycache__/
 
 # Données volumineuses : GitHub refuse tout fichier > 100 Mo
 # (le fichier source DVF et la table de faits générée dépassent cette limite)
-ValeursFoncieres-2025.txt
+ValeursFoncieres-*.txt
 datamart/fait_mutation.csv
 
 # Projet Power BI (.pbip) : caches locaux et fichiers binaires

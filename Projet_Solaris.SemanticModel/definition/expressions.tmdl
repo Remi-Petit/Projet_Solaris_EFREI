@@ -1,11 +1,21 @@
 expression DVF_Brut =
 		let
-		    Source = Csv.Document(File.Contents("C:/Users/Lenovo/Desktop/PowerBi/Projet_Solaris/ValeursFoncieres-2025.txt"), [Delimiter="|", Encoding=65001, QuoteStyle=QuoteStyle.Csv]),
-		    Promoted = Table.PromoteHeaders(Source, [PromoteAllScalars=false]),
-		    Colonnes = Table.SelectColumns(Promoted, {"No disposition", "Date mutation", "Nature mutation", "Valeur fonciere", "No voie", "B/T/Q", "Code voie", "Code postal", "Commune", "Code departement", "Code commune", "Nombre de lots", "Code type local", "Type local", "Identifiant local", "Surface reelle bati", "Nombre pieces principales", "Nature culture", "Nature culture speciale", "Surface terrain"}),
-		    Renomme = Table.RenameColumns(Colonnes, {{"No disposition", "no_disposition"}, {"Date mutation", "date_mutation"}, {"Nature mutation", "nature_mutation"}, {"Valeur fonciere", "valeur_fonciere"}, {"No voie", "no_voie"}, {"B/T/Q", "btq"}, {"Code voie", "code_voie"}, {"Code postal", "code_postal"}, {"Commune", "commune"}, {"Code departement", "code_departement"}, {"Code commune", "code_commune"}, {"Nombre de lots", "nombre_lots"}, {"Code type local", "code_type_local"}, {"Type local", "type_local"}, {"Identifiant local", "identifiant_local"}, {"Surface reelle bati", "surface_reelle_bati"}, {"Nombre pieces principales", "nombre_pieces_principales"}, {"Nature culture", "nature_culture"}, {"Nature culture speciale", "nature_culture_speciale"}, {"Surface terrain", "surface_terrain"}}),
-		    Types = Table.TransformColumnTypes(Renomme, {{"no_disposition", type text}, {"date_mutation", type date}, {"nature_mutation", type text}, {"valeur_fonciere", type number}, {"no_voie", type text}, {"btq", type text}, {"code_voie", type text}, {"code_postal", type text}, {"commune", type text}, {"code_departement", type text}, {"code_commune", type text}, {"nombre_lots", Int64.Type}, {"code_type_local", type text}, {"type_local", type text}, {"identifiant_local", type text}, {"surface_reelle_bati", type number}, {"nombre_pieces_principales", Int64.Type}, {"nature_culture", type text}, {"nature_culture_speciale", type text}, {"surface_terrain", type number}}, "fr-FR"),
-		    Codes = Table.TransformColumns(Types, {{"code_departement", each if _ = null then null else Text.PadStart(_, 2, "0"), type text}, {"code_commune", each if _ = null then null else Text.PadStart(_, 3, "0"), type text}, {"code_postal", each if _ = null then null else Text.PadStart(_, 5, "0"), type text}}),
+		    Dossier = "C:/Users/Lenovo/Desktop/PowerBi/Projet_Solaris",
+		    Annees = {"2024", "2025"},
+		    Fichiers = Table.SelectRows(Folder.Files(Dossier), each List.Contains(Annees, Text.BetweenDelimiters([Name], "ValeursFoncieres-", ".txt"))),
+		    Tri = Table.Sort(Fichiers, {{"Name", Order.Ascending}}),
+		    LireFichier = (contenu as binary) as table =>
+		        let
+		            Source = Csv.Document(contenu, [Delimiter="|", Encoding=65001, QuoteStyle=QuoteStyle.Csv]),
+		            Promoted = Table.PromoteHeaders(Source, [PromoteAllScalars=false]),
+		            Colonnes = Table.SelectColumns(Promoted, {"No disposition", "Date mutation", "Nature mutation", "Valeur fonciere", "No voie", "B/T/Q", "Code voie", "Code postal", "Commune", "Code departement", "Code commune", "Nombre de lots", "Code type local", "Type local", "Identifiant local", "Surface reelle bati", "Nombre pieces principales", "Nature culture", "Nature culture speciale", "Surface terrain"}),
+		            Renomme = Table.RenameColumns(Colonnes, {{"No disposition", "no_disposition"}, {"Date mutation", "date_mutation"}, {"Nature mutation", "nature_mutation"}, {"Valeur fonciere", "valeur_fonciere"}, {"No voie", "no_voie"}, {"B/T/Q", "btq"}, {"Code voie", "code_voie"}, {"Code postal", "code_postal"}, {"Commune", "commune"}, {"Code departement", "code_departement"}, {"Code commune", "code_commune"}, {"Nombre de lots", "nombre_lots"}, {"Code type local", "code_type_local"}, {"Type local", "type_local"}, {"Identifiant local", "identifiant_local"}, {"Surface reelle bati", "surface_reelle_bati"}, {"Nombre pieces principales", "nombre_pieces_principales"}, {"Nature culture", "nature_culture"}, {"Nature culture speciale", "nature_culture_speciale"}, {"Surface terrain", "surface_terrain"}}),
+		            Types = Table.TransformColumnTypes(Renomme, {{"no_disposition", type text}, {"date_mutation", type date}, {"nature_mutation", type text}, {"valeur_fonciere", type number}, {"no_voie", type text}, {"btq", type text}, {"code_voie", type text}, {"code_postal", type text}, {"commune", type text}, {"code_departement", type text}, {"code_commune", type text}, {"nombre_lots", Int64.Type}, {"code_type_local", type text}, {"type_local", type text}, {"identifiant_local", type text}, {"surface_reelle_bati", type number}, {"nombre_pieces_principales", Int64.Type}, {"nature_culture", type text}, {"nature_culture_speciale", type text}, {"surface_terrain", type number}}, "fr-FR")
+		        in
+		            Types,
+		    Charge = Table.AddColumn(Tri, "Tables", each LireFichier([Content])),
+		    Combine = Table.Combine(Charge[Tables]),
+		    Codes = Table.TransformColumns(Combine, {{"code_departement", each if _ = null then null else Text.PadStart(_, 2, "0"), type text}, {"code_commune", each if _ = null then null else Text.PadStart(_, 3, "0"), type text}, {"code_postal", each if _ = null then null else Text.PadStart(_, 5, "0"), type text}}),
 		    CodeType0 = Table.ReplaceValue(Codes, null, "0", Replacer.ReplaceValue, {"code_type_local"}),
 		    CodeType1 = Table.ReplaceValue(CodeType0, "", "0", Replacer.ReplaceValue, {"code_type_local"}),
 		    TypeLocal0 = Table.ReplaceValue(CodeType1, null, "Non renseigne (terrain / dependance)", Replacer.ReplaceValue, {"type_local"}),
@@ -53,9 +63,13 @@ expression q_dim_departement =
 		    Distinct = Table.Distinct(Cols),
 		    Filtre = Table.SelectRows(Distinct, each [code_departement] <> null and [code_departement] <> ""),
 		    Renomme = Table.RenameColumns(Filtre, {{"code_departement", "cle_departement"}}),
-		    Code = Table.AddColumn(Renomme, "code_departement", each [cle_departement], type text),
-		    Final = Table.SelectColumns(Code, {"cle_departement", "code_departement"}),
-		    Trie = Table.Sort(Final, {{"cle_departement", Order.Ascending}})
+		    Ref = Table.RenameColumns(q_ref_departement, {{"code_departement", "cle_departement"}}),
+		    Jointure = Table.NestedJoin(Renomme, {"cle_departement"}, Ref, {"cle_departement"}, "Ref", JoinKind.LeftOuter),
+		    Etendu = Table.ExpandTableColumn(Jointure, "Ref", {"nom_departement", "cle_region"}),
+		    Code = Table.AddColumn(Etendu, "code_departement", each [cle_departement], type text),
+		    Colonnes = Table.SelectColumns(Code, {"cle_departement", "code_departement", "nom_departement", "cle_region"}),
+		    Types = Table.TransformColumnTypes(Colonnes, {{"cle_departement", type text}, {"code_departement", type text}, {"nom_departement", type text}, {"cle_region", type text}}),
+		    Trie = Table.Sort(Types, {{"code_departement", Order.Ascending}})
 		in
 		    Trie
 	lineageTag: 4b666445-2b81-4e46-81ef-3b551362f806
@@ -147,4 +161,160 @@ expression q_fait_agrege =
 		in
 		    Final
 	lineageTag: d98904cd-0e61-4925-b16b-30e9ba157a3a
+
+expression q_ref_departement =
+		let
+		    Source = Table.FromRows(
+		        {
+		            {"01", "Ain", "84"},
+		            {"02", "Aisne", "32"},
+		            {"03", "Allier", "84"},
+		            {"04", "Alpes-de-Haute-Provence", "93"},
+		            {"05", "Hautes-Alpes", "93"},
+		            {"06", "Alpes-Maritimes", "93"},
+		            {"07", "Ardèche", "84"},
+		            {"08", "Ardennes", "44"},
+		            {"09", "Ariège", "76"},
+		            {"10", "Aube", "44"},
+		            {"11", "Aude", "76"},
+		            {"12", "Aveyron", "76"},
+		            {"13", "Bouches-du-Rhône", "93"},
+		            {"14", "Calvados", "28"},
+		            {"15", "Cantal", "84"},
+		            {"16", "Charente", "75"},
+		            {"17", "Charente-Maritime", "75"},
+		            {"18", "Cher", "24"},
+		            {"19", "Corrèze", "75"},
+		            {"2A", "Corse-du-Sud", "94"},
+		            {"2B", "Haute-Corse", "94"},
+		            {"21", "Côte-d'Or", "27"},
+		            {"22", "Côtes-d'Armor", "53"},
+		            {"23", "Creuse", "75"},
+		            {"24", "Dordogne", "75"},
+		            {"25", "Doubs", "27"},
+		            {"26", "Drôme", "84"},
+		            {"27", "Eure", "28"},
+		            {"28", "Eure-et-Loir", "24"},
+		            {"29", "Finistère", "53"},
+		            {"30", "Gard", "76"},
+		            {"31", "Haute-Garonne", "76"},
+		            {"32", "Gers", "76"},
+		            {"33", "Gironde", "75"},
+		            {"34", "Hérault", "76"},
+		            {"35", "Ille-et-Vilaine", "53"},
+		            {"36", "Indre", "24"},
+		            {"37", "Indre-et-Loire", "24"},
+		            {"38", "Isère", "84"},
+		            {"39", "Jura", "27"},
+		            {"40", "Landes", "75"},
+		            {"41", "Loir-et-Cher", "24"},
+		            {"42", "Loire", "84"},
+		            {"43", "Haute-Loire", "84"},
+		            {"44", "Loire-Atlantique", "52"},
+		            {"45", "Loiret", "24"},
+		            {"46", "Lot", "76"},
+		            {"47", "Lot-et-Garonne", "75"},
+		            {"48", "Lozère", "76"},
+		            {"49", "Maine-et-Loire", "52"},
+		            {"50", "Manche", "28"},
+		            {"51", "Marne", "44"},
+		            {"52", "Haute-Marne", "44"},
+		            {"53", "Mayenne", "52"},
+		            {"54", "Meurthe-et-Moselle", "44"},
+		            {"55", "Meuse", "44"},
+		            {"56", "Morbihan", "53"},
+		            {"57", "Moselle", "44"},
+		            {"58", "Nièvre", "27"},
+		            {"59", "Nord", "32"},
+		            {"60", "Oise", "32"},
+		            {"61", "Orne", "28"},
+		            {"62", "Pas-de-Calais", "32"},
+		            {"63", "Puy-de-Dôme", "84"},
+		            {"64", "Pyrénées-Atlantiques", "75"},
+		            {"65", "Hautes-Pyrénées", "76"},
+		            {"66", "Pyrénées-Orientales", "76"},
+		            {"67", "Bas-Rhin", "44"},
+		            {"68", "Haut-Rhin", "44"},
+		            {"69", "Rhône", "84"},
+		            {"70", "Haute-Saône", "27"},
+		            {"71", "Saône-et-Loire", "27"},
+		            {"72", "Sarthe", "52"},
+		            {"73", "Savoie", "84"},
+		            {"74", "Haute-Savoie", "84"},
+		            {"75", "Paris", "11"},
+		            {"76", "Seine-Maritime", "28"},
+		            {"77", "Seine-et-Marne", "11"},
+		            {"78", "Yvelines", "11"},
+		            {"79", "Deux-Sèvres", "75"},
+		            {"80", "Somme", "32"},
+		            {"81", "Tarn", "76"},
+		            {"82", "Tarn-et-Garonne", "76"},
+		            {"83", "Var", "93"},
+		            {"84", "Vaucluse", "93"},
+		            {"85", "Vendée", "52"},
+		            {"86", "Vienne", "75"},
+		            {"87", "Haute-Vienne", "75"},
+		            {"88", "Vosges", "44"},
+		            {"89", "Yonne", "27"},
+		            {"90", "Territoire de Belfort", "27"},
+		            {"91", "Essonne", "11"},
+		            {"92", "Hauts-de-Seine", "11"},
+		            {"93", "Seine-Saint-Denis", "11"},
+		            {"94", "Val-de-Marne", "11"},
+		            {"95", "Val-d'Oise", "11"},
+		            {"971", "Guadeloupe", "01"},
+		            {"972", "Martinique", "02"},
+		            {"973", "Guyane", "03"},
+		            {"974", "La Réunion", "04"},
+		            {"976", "Mayotte", "06"}
+		        },
+		        {"code_departement", "nom_departement", "cle_region"}
+		    ),
+		    Types = Table.TransformColumnTypes(Source, {{"code_departement", type text}, {"nom_departement", type text}, {"cle_region", type text}})
+		in
+		    Types
+	lineageTag: 7b3f2a41-9c86-4d52-b0e7-51a3c8d94e21
+
+expression q_ref_region =
+		let
+		    Source = Table.FromRows(
+		        {
+		            {"01", "Guadeloupe"},
+		            {"02", "Martinique"},
+		            {"03", "Guyane"},
+		            {"04", "La Réunion"},
+		            {"06", "Mayotte"},
+		            {"11", "Île-de-France"},
+		            {"24", "Centre-Val de Loire"},
+		            {"27", "Bourgogne-Franche-Comté"},
+		            {"28", "Normandie"},
+		            {"32", "Hauts-de-France"},
+		            {"44", "Grand Est"},
+		            {"52", "Pays de la Loire"},
+		            {"53", "Bretagne"},
+		            {"75", "Nouvelle-Aquitaine"},
+		            {"76", "Occitanie"},
+		            {"84", "Auvergne-Rhône-Alpes"},
+		            {"93", "Provence-Alpes-Côte d'Azur"},
+		            {"94", "Corse"}
+		        },
+		        {"cle_region", "nom_region"}
+		    ),
+		    Types = Table.TransformColumnTypes(Source, {{"cle_region", type text}, {"nom_region", type text}})
+		in
+		    Types
+	lineageTag: 3d9148c6-52af-4b7e-9a63-8f0c2b74e5ad
+
+expression q_dim_region =
+		let
+		    Base = q_dim_departement,
+		    Regions = Table.Distinct(Table.SelectColumns(Base, {"cle_region"})),
+		    Filtre = Table.SelectRows(Regions, each [cle_region] <> null and [cle_region] <> ""),
+		    Jointure = Table.NestedJoin(Filtre, {"cle_region"}, q_ref_region, {"cle_region"}, "Ref", JoinKind.LeftOuter),
+		    Etendu = Table.ExpandTableColumn(Jointure, "Ref", {"nom_region"}),
+		    Colonnes = Table.SelectColumns(Etendu, {"cle_region", "nom_region"}),
+		    Trie = Table.Sort(Colonnes, {{"nom_region", Order.Ascending}})
+		in
+		    Trie
+	lineageTag: cc4a17f2-6e58-4b93-8d21-a7f0e39c5b64
 

@@ -1,0 +1,21 @@
+table dim_region
+	lineageTag: 9c04e7a2-3b16-4d85-92f0-6ea5371cd42b
+
+	column cle_region
+		dataType: string
+		lineageTag: 1b7a60d9-83c4-4e27-a5f1-0d98c6b3427e
+		sourceColumn: cle_region
+
+	column nom_region
+		dataType: string
+		lineageTag: 2e5c93f7-4a18-4b60-9d37-71c8e0a5b924
+		sourceColumn: nom_region
+
+	partition dim_region = m
+		mode: import
+		source =
+				let
+				    Source = q_dim_region
+				in
+				    Source
+
