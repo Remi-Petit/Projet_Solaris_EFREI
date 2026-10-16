@@ -1,7 +1,7 @@
 # Projet Solaris - état et étapes restantes
 
 > Dernière vérification : **16 octobre 2026**
-> Modèle : **10 tables, 11 relations, 13 mesures, 13 requêtes Power Query**.
+> Modèle : **10 tables, 11 relations, 15 mesures, 13 requêtes Power Query**.
 > Volumes mesurés : **7 214 760** lignes (`fait_mutation`) + **1 614 973** lignes
 > (`fait_marche_agrege`). Années couvertes : **2024 et 2025**.
 
@@ -12,7 +12,7 @@
 | Élément | État |
 |---|---|
 | Projet Power BI `Projet_Solaris.pbip` (modèle + rapport) | ✅ enregistré sur le disque |
-| Modèle en flocon | ✅ 10 tables / 11 relations / 13 mesures |
+| Modèle en flocon | ✅ 10 tables / 11 relations / 15 mesures |
 | Requêtes Power Query (ETL) | ✅ 13 requêtes M |
 | Données chargées et à jour | ✅ 7 214 760 + 1 614 973 lignes |
 | Analyse par **région / département / commune** | ✅ `dim_region` → `dim_departement` → `dim_commune` |
@@ -82,6 +82,20 @@ Vue globale :
 | 2024 | 1 237 625 | 285 013 446 757 € | 2 156,13 € |
 | 2025 | 1 320 973 | 319 901 489 835 € | 2 187,23 € |
 | **Total** | **2 558 598** | **604 914 936 592 €** | **2 172,46 €** |
+
+Les trois indicateurs de prix (le premier mélange terrains et bâtiments, les deux
+autres isolent chaque marché) :
+
+| Indicateur | 2024 | 2025 | Total |
+|---|---:|---:|---:|
+| `Prix moyen m2` (tout) | 2 156,13 € | 2 187,23 € | 2 172,46 € |
+| `Prix moyen m2 habitation` (maisons + appartements) | 2 494,36 € | 2 540,76 € | 2 518,95 € |
+| `Prix moyen m2 terrain` | 17,88 € | 18,60 € | 18,25 € |
+
+> Une cellule vide dans `Prix moyen m2` est **normale** : la surface bâtie n'existe
+> pas pour les terrains et les dépendances (67 % des lignes). Ces communes ont
+> souvent un `Prix moyen m2 terrain` renseigné à la place. Détail dans
+> `MODELE_DATAMART.md` §3.
 
 Par région :
 

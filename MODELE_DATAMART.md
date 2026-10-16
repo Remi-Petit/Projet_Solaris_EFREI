@@ -221,6 +221,8 @@ Les mesures déposées dans le modèle :
 | `Surface batie totale` | `fait_mutation` | `SUM(surface_reelle_bati)` |
 | `Surface terrain totale` | `fait_mutation` | `SUM(surface_terrain)` |
 | `Prix moyen m2` | `fait_mutation` | `DIVIDE([Valeur fonciere totale], [Surface batie totale])` |
+| `Prix moyen m2 habitation` | `fait_mutation` | `DIVIDE(CALCULATE([Valeur fonciere totale], type_local IN {Maison, Appartement}), CALCULATE([Surface batie totale], type_local IN {Maison, Appartement}))` |
+| `Prix moyen m2 terrain` | `fait_mutation` | `DIVIDE(CALCULATE([Valeur fonciere totale], type_local = terrain), CALCULATE([Surface terrain totale], type_local = terrain))` |
 | `Nombre de locaux` | `fait_mutation` | `COUNTROWS(fait_mutation)` |
 | `Nb mutations agrege` | `fait_marche_agrege` | `SUM(nombre_de_mutations)` |
 | `Nb locaux agrege` | `fait_marche_agrege` | `SUM(nombre_de_locaux)` |
@@ -236,6 +238,34 @@ Contrôle de cohérence entre les deux tables de faits :
 | Nombre de mutations | 2 558 598 | 2 558 598 |
 | Valeur foncière totale | 604 914 936 592 € | 604 914 936 592 € |
 | Prix moyen au m² | 2 172,46 € | 2 172,46 € |
+
+### Pourquoi certains prix au m² sont vides
+
+`Prix moyen m2` divise la valeur par la **surface bâtie**. Or la source ne renseigne
+cette surface **que pour les maisons et les appartements** :
+
+| Type de local | Lignes | Dont sans surface bâtie |
+|---|---:|---:|
+| Non renseigné (terrain / dépendance) | 2 942 044 | **2 942 044 (100 %)** |
+| Dépendance | 1 899 893 | **1 899 893 (100 %)** |
+| Maison | 1 168 634 | 53 |
+| Appartement | 977 258 | 148 |
+| Local industriel / commercial | 226 931 | 13 224 |
+
+**4 855 362 lignes (67 %) n'ont donc pas de surface bâtie** : ce sont les terrains
+et les dépendances (caves, garages, parkings…). Dans une commune où seuls des
+terrains ou des dépendances se sont vendus dans l'année, la division n'a pas de
+dénominateur : DAX `DIVIDE` renvoie **vide**, d'où la cellule blanche. En 2025,
+2 056 communes sur 31 148 (6,6 %) sont dans ce cas.
+
+Ces lignes représentent malgré tout **441 Md€, soit 73 % de la valeur foncière**,
+d'où deux mesures dédiées pour ne pas mélanger les genres :
+
+| Mesure | Périmètre | Valeur 2025 |
+|---|---|---:|
+| `Prix moyen m2` | tout (terrains compris au numérateur) | 2 187,23 € |
+| `Prix moyen m2 habitation` | maisons + appartements uniquement | **2 540,76 €** |
+| `Prix moyen m2 terrain` | terrains (valeur / surface de terrain) | **18,60 €** |
 
 ---
 

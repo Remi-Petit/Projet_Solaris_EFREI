@@ -94,6 +94,34 @@
               },
               "queryRef": "fait_mutation.Prix moyen m2",
               "nativeQueryRef": "Prix moyen m2"
+            },
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "fait_mutation"
+                    }
+                  },
+                  "Property": "Prix moyen m2 habitation"
+                }
+              },
+              "queryRef": "fait_mutation.Prix moyen m2 habitation",
+              "nativeQueryRef": "Prix moyen m2 habitation"
+            },
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "fait_mutation"
+                    }
+                  },
+                  "Property": "Prix moyen m2 terrain"
+                }
+              },
+              "queryRef": "fait_mutation.Prix moyen m2 terrain",
+              "nativeQueryRef": "Prix moyen m2 terrain"
             }
           ]
         }
@@ -169,6 +197,34 @@
               }
             },
             "Property": "Prix moyen m2"
+          }
+        },
+        "type": "Advanced"
+      },
+      {
+        "name": "1a19feac699db8e40b98",
+        "field": {
+          "Measure": {
+            "Expression": {
+              "SourceRef": {
+                "Entity": "fait_mutation"
+              }
+            },
+            "Property": "Prix moyen m2 habitation"
+          }
+        },
+        "type": "Advanced"
+      },
+      {
+        "name": "cc10e85186256467c316",
+        "field": {
+          "Measure": {
+            "Expression": {
+              "SourceRef": {
+                "Entity": "fait_mutation"
+              }
+            },
+            "Property": "Prix moyen m2 terrain"
           }
         },
         "type": "Advanced"

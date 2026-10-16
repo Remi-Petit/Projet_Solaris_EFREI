@@ -40,6 +40,24 @@ table fait_mutation
 		formatString: #,##0
 		lineageTag: 7f6e4736-21d7-412e-88ea-ac830fa0ef22
 
+	/// Prix moyen au m2 des logements uniquement (maisons et appartements) : exclut les terrains et dependances, qui n'ont pas de surface batie dans la source
+	measure 'Prix moyen m2 habitation' =
+			DIVIDE(
+			    CALCULATE([Valeur fonciere totale], dim_type_local[type_local] IN {"Maison", "Appartement"}),
+			    CALCULATE([Surface batie totale], dim_type_local[type_local] IN {"Maison", "Appartement"})
+			)
+		formatString: #,##0.00 €
+		lineageTag: b41f8c07-2e93-4d56-a8c1-7f0e5b29d346
+
+	/// Prix moyen au m2 des terrains (mutations sans surface batie) : valeur fonciere divisee par la surface de terrain
+	measure 'Prix moyen m2 terrain' =
+			DIVIDE(
+			    CALCULATE([Valeur fonciere totale], dim_type_local[type_local] = "Non renseigne (terrain / dependance)"),
+			    CALCULATE([Surface terrain totale], dim_type_local[type_local] = "Non renseigne (terrain / dependance)")
+			)
+		formatString: #,##0.00 €
+		lineageTag: 59a7d3e8-6c14-4f80-b25d-e8b3076c91af
+
 	column cle_mutation
 		dataType: string
 		lineageTag: 365cbab2-8646-4d99-a902-742b1d3770e4
