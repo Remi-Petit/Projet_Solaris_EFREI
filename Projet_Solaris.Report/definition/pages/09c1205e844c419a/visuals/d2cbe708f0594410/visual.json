@@ -13,25 +13,6 @@
     "visualType": "pivotTable",
     "query": {
       "queryState": {
-        "Rows": {
-          "projections": [
-            {
-              "field": {
-                "Column": {
-                  "Expression": {
-                    "SourceRef": {
-                      "Entity": "dim_commune"
-                    }
-                  },
-                  "Property": "commune"
-                }
-              },
-              "queryRef": "dim_commune.commune",
-              "nativeQueryRef": "commune",
-              "active": true
-            }
-          ]
-        },
         "Columns": {
           "projections": [
             {
@@ -47,6 +28,25 @@
               },
               "queryRef": "dim_temps.annee",
               "nativeQueryRef": "annee",
+              "active": true
+            }
+          ]
+        },
+        "Rows": {
+          "projections": [
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "dim_commune"
+                    }
+                  },
+                  "Property": "commune"
+                }
+              },
+              "queryRef": "dim_commune.commune",
+              "nativeQueryRef": "commune",
               "active": true
             }
           ]
@@ -100,5 +100,79 @@
       }
     },
     "drillFilterOtherVisuals": true
+  },
+  "filterConfig": {
+    "filters": [
+      {
+        "name": "2a1b20a1d142fb3bb3e2",
+        "field": {
+          "Column": {
+            "Expression": {
+              "SourceRef": {
+                "Entity": "dim_commune"
+              }
+            },
+            "Property": "commune"
+          }
+        },
+        "type": "Categorical"
+      },
+      {
+        "name": "6532144ee0ac70508090",
+        "field": {
+          "Column": {
+            "Expression": {
+              "SourceRef": {
+                "Entity": "dim_temps"
+              }
+            },
+            "Property": "annee"
+          }
+        },
+        "type": "Advanced"
+      },
+      {
+        "name": "22f1db65cb3180c0f5f5",
+        "field": {
+          "Measure": {
+            "Expression": {
+              "SourceRef": {
+                "Entity": "fait_mutation"
+              }
+            },
+            "Property": "Nombre de mutations"
+          }
+        },
+        "type": "Advanced"
+      },
+      {
+        "name": "7a6531770995c0c9ec45",
+        "field": {
+          "Measure": {
+            "Expression": {
+              "SourceRef": {
+                "Entity": "fait_mutation"
+              }
+            },
+            "Property": "Valeur fonciere totale"
+          }
+        },
+        "type": "Advanced"
+      },
+      {
+        "name": "53ca415b6252af34f315",
+        "field": {
+          "Measure": {
+            "Expression": {
+              "SourceRef": {
+                "Entity": "fait_mutation"
+              }
+            },
+            "Property": "Prix moyen m2"
+          }
+        },
+        "type": "Advanced"
+      }
+    ]
   }
 }
