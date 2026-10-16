@@ -22,6 +22,7 @@
 | Page « Marché par région et département 2024 » | ✅ matrices région et département |
 | Chiffres de contrôle | ✅ vérifiés (voir §4) |
 | Rapport de remise | ✅ `Rapport_Projet_Solaris_G1.docx` + `.pdf` (14 pages, captures des matrices) |
+| Livrable `.pbix` | ✅ `Projet_Solaris.pbix` (124 Mo : modèle + données + rapport) |
 | Proposition de la source au professeur | ✅ faite (à confirmer si retour attendu) |
 
 **Historique.** Le modèle construit le 2 octobre a été perdu (fenêtre Power BI
@@ -202,3 +203,19 @@ Il faut donc commencer par demander :
   relevé de la page réelle de chaque titre, puis génération définitive.
 - Le schéma en flocon est dessiné à part (matplotlib, figure 1) et les captures
   des matrices proviennent de Power BI Desktop (figures 2 et 3).
+
+## 10. Le fichier `.pbix` de remise
+
+Le rendu demande un `.pbix` : il est produit depuis Power BI Desktop, il n'existe
+pas de conversion en ligne de commande.
+
+1. Ouvrir `Projet_Solaris.pbip`, puis **Fichier → Enregistrer sous**.
+2. Choisir **Enregistrer une copie** puis **Parcourir cet appareil**.
+3. Type : **Fichier Power BI (*.pbix)**, nom : `Projet_Solaris`, puis Enregistrer.
+
+> Le `.pbix` contient le modèle **et les données** : il s'ouvre sans actualisation.
+> Il fait 124 Mo et n'est **pas versionné** (`.gitignore`, ligne `*.pbix`) : GitHub
+> refuse les fichiers de plus de 100 Mo. L'enregistrement se fait « en copie » :
+> Power BI continue de travailler sur le projet `.pbip`, qui reste la source de
+> vérité. Après toute modification dans le `.pbip`, refaire l'export pour
+> synchroniser le `.pbix`.
