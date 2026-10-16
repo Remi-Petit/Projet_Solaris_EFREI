@@ -10,3 +10,8 @@ __pycache__/
 # (le fichier source DVF et la table de faits générée dépassent cette limite)
 ValeursFoncieres-2025.txt
 datamart/fait_mutation.csv
+
+# Projet Power BI (.pbip) : caches locaux et fichiers binaires
+**/.pbi/localSettings.json
+**/.pbi/cache.abf
+*.pbix

@@ -270,7 +270,10 @@ et comment le prix au m² évolue dans l'année.
 > **prix moyen au m²**, et pouvoir ventiler par **type de bien** et
 > **nature de mutation**.
 
-### Tableau croisé (matrice) à réaliser
+### Tableau croisé (matrice) réalisé
+
+> La matrice est présente dans le rapport du projet `Projet_Solaris.pbip`,
+> page **« Marché immobilier 2025 »**.
 
 | | Colonne |
 |---|---|
@@ -298,11 +301,12 @@ Résultats de contrôle obtenus sur le modèle :
 ## 7. Reproduire / actualiser
 
 Le datamart n'est plus produit par un script : il est **construit par Power Query
-dans le fichier `.pbix`**.
+dans le projet `Projet_Solaris.pbip`**.
 
-1. Ouvrir `solaris.pbix` dans Power BI Desktop.
+1. Ouvrir `Projet_Solaris.pbip` dans Power BI Desktop.
 2. **Accueil → Actualiser** : Power Query relit `ValeursFoncieres-2025.txt` et
-   reconstruit les 9 tables.
+   reconstruit les 9 tables. Inutile tant que la source n'a pas changé : les
+   données sont déjà dans le cache du projet.
 3. Le fichier source doit rester à cet emplacement :
    `C:\Users\Lenovo\Desktop\PowerBi\Projet_Solaris\ValeursFoncieres-2025.txt`.
    Le chemin est codé dans la requête `DVF_Brut` (chemin absolu).

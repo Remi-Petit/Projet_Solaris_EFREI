@@ -1,0 +1,11 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/gitIntegration/platformProperties/2.0.0/schema.json",
+  "metadata": {
+    "type": "Report",
+    "displayName": "Projet_Solaris"
+  },
+  "config": {
+    "version": "2.0",
+    "logicalId": "9ab5a33e-cd52-496b-9411-0b6b69fb0315"
+  }
+}

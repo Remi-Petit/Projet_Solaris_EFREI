@@ -1,0 +1,98 @@
+table fait_marche_agrege
+	lineageTag: b595dcd7-000f-4011-a3a1-1b7057554fce
+
+	/// Nombre de mutations (table agregee)
+	measure 'Nb mutations agrege' = SUM(fait_marche_agrege[nombre_de_mutations])
+		formatString: #,##0
+		displayFolder: Datamart agrege
+		lineageTag: cc6df45d-5d27-4e66-b581-9d07b34fd93f
+
+	/// Nombre de locaux (table agregee)
+	measure 'Nb locaux agrege' = SUM(fait_marche_agrege[nombre_de_locaux])
+		formatString: #,##0
+		displayFolder: Datamart agrege
+		lineageTag: ca0c539f-74f9-4c5c-9b79-ed93aa050c34
+
+	/// Valeur fonciere totale (table agregee)
+	measure 'Valeur agregee' = SUM(fait_marche_agrege[valeur_fonciere_totale])
+		formatString: #,##0 €
+		displayFolder: Datamart agrege
+		lineageTag: 49dbb92b-85f4-4ede-a5ad-2c2a128207f9
+
+	/// Valeur fonciere moyenne par mutation (table agregee)
+	measure 'Valeur moyenne agregee' = DIVIDE([Valeur agregee], [Nb mutations agrege])
+		formatString: #,##0 €
+		displayFolder: Datamart agrege
+		lineageTag: ae310c0c-600c-4359-983f-912d69e47867
+
+	/// Surface batie totale (table agregee)
+	measure 'Surface agregee' = SUM(fait_marche_agrege[surface_batie_totale])
+		formatString: #,##0.00
+		displayFolder: Datamart agrege
+		lineageTag: af65bb17-a1ed-47ff-bcbd-65701d39c6d7
+
+	/// Prix moyen au m2 (table agregee)
+	measure 'Prix moyen m2 agrege' = DIVIDE([Valeur agregee], [Surface agregee])
+		formatString: #,##0.00 €
+		displayFolder: Datamart agrege
+		lineageTag: 6ed1fd4d-ef3f-4cc0-826f-0def555a67b3
+
+	column cle_temps
+		dataType: int64
+		lineageTag: 4b384f3a-5cef-46fa-ba6e-e1e772eb613f
+		sourceColumn: cle_temps
+
+	column cle_commune
+		dataType: string
+		lineageTag: 2ed10782-6197-476a-8466-3e93eb1a4cd0
+		sourceColumn: cle_commune
+
+	column cle_nature_mutation
+		dataType: string
+		lineageTag: edc7fa51-6888-42da-8d13-4b7e3b5a6e52
+		sourceColumn: cle_nature_mutation
+
+	column nombre_de_mutations
+		dataType: int64
+		formatString: #,##0
+		lineageTag: 5dac470d-6e5f-4bfe-8d19-3c2a595d5b38
+		sourceColumn: nombre_de_mutations
+
+	column nombre_de_locaux
+		dataType: int64
+		formatString: #,##0
+		lineageTag: a23168a7-7f62-49dd-b94a-8594d63c0494
+		sourceColumn: nombre_de_locaux
+
+	column valeur_fonciere_totale
+		dataType: double
+		formatString: #,##0 €
+		lineageTag: 62f6cdb6-e091-4e8b-84d7-8e2a903b0ba1
+		sourceColumn: valeur_fonciere_totale
+
+	column surface_batie_totale
+		dataType: double
+		formatString: #,##0.00
+		lineageTag: ccb4284c-106d-4f14-89fd-d7fdf9286354
+		sourceColumn: surface_batie_totale
+
+	column nombre_pieces_total
+		dataType: int64
+		formatString: #,##0
+		lineageTag: 46b95725-21e4-4948-bc3c-81bf08820c0a
+		sourceColumn: nombre_pieces_total
+
+	column prix_moyen_m2
+		dataType: double
+		formatString: #,##0.00 €
+		lineageTag: 30214bac-fcb2-4802-9103-b35537f62d27
+		sourceColumn: prix_moyen_m2
+
+	partition fait_marche_agrege = m
+		mode: import
+		source =
+				let
+				    Source = q_fait_agrege
+				in
+				    Source
+

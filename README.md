@@ -12,10 +12,12 @@ utilisée** : Power Query le lit directement (473 Mo, séparateur `|`).
 ## 2. Construire le datamart
 
 Le datamart (1 table de faits détaillée + 1 table de faits agrégée + 7 dimensions)
-est construit **intégralement en Power Query**, dans `solaris.pbix`.
+est construit **intégralement en Power Query**, dans le projet `Projet_Solaris.pbip`.
 
-1. Ouvrir `solaris.pbix` dans Power BI Desktop
-2. **Accueil → Actualiser**
+1. Ouvrir `Projet_Solaris.pbip` dans Power BI Desktop
+2. Le rapport s'affiche sur la page « Marché immobilier 2025 » (la matrice)
+3. **Accueil → Actualiser** seulement si `ValeursFoncieres-2025.txt` a changé :
+   les données sont déjà dans le cache du projet (`68 Mo`)
 
 Voir `MODELE_DATAMART.md` pour le schéma en flocon, les transformations et les mesures.
 

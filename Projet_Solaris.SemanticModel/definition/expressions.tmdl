@@ -1,0 +1,150 @@
+expression DVF_Brut =
+		let
+		    Source = Csv.Document(File.Contents("C:/Users/Lenovo/Desktop/PowerBi/Projet_Solaris/ValeursFoncieres-2025.txt"), [Delimiter="|", Encoding=65001, QuoteStyle=QuoteStyle.Csv]),
+		    Promoted = Table.PromoteHeaders(Source, [PromoteAllScalars=false]),
+		    Colonnes = Table.SelectColumns(Promoted, {"No disposition", "Date mutation", "Nature mutation", "Valeur fonciere", "No voie", "B/T/Q", "Code voie", "Code postal", "Commune", "Code departement", "Code commune", "Nombre de lots", "Code type local", "Type local", "Identifiant local", "Surface reelle bati", "Nombre pieces principales", "Nature culture", "Nature culture speciale", "Surface terrain"}),
+		    Renomme = Table.RenameColumns(Colonnes, {{"No disposition", "no_disposition"}, {"Date mutation", "date_mutation"}, {"Nature mutation", "nature_mutation"}, {"Valeur fonciere", "valeur_fonciere"}, {"No voie", "no_voie"}, {"B/T/Q", "btq"}, {"Code voie", "code_voie"}, {"Code postal", "code_postal"}, {"Commune", "commune"}, {"Code departement", "code_departement"}, {"Code commune", "code_commune"}, {"Nombre de lots", "nombre_lots"}, {"Code type local", "code_type_local"}, {"Type local", "type_local"}, {"Identifiant local", "identifiant_local"}, {"Surface reelle bati", "surface_reelle_bati"}, {"Nombre pieces principales", "nombre_pieces_principales"}, {"Nature culture", "nature_culture"}, {"Nature culture speciale", "nature_culture_speciale"}, {"Surface terrain", "surface_terrain"}}),
+		    Types = Table.TransformColumnTypes(Renomme, {{"no_disposition", type text}, {"date_mutation", type date}, {"nature_mutation", type text}, {"valeur_fonciere", type number}, {"no_voie", type text}, {"btq", type text}, {"code_voie", type text}, {"code_postal", type text}, {"commune", type text}, {"code_departement", type text}, {"code_commune", type text}, {"nombre_lots", Int64.Type}, {"code_type_local", type text}, {"type_local", type text}, {"identifiant_local", type text}, {"surface_reelle_bati", type number}, {"nombre_pieces_principales", Int64.Type}, {"nature_culture", type text}, {"nature_culture_speciale", type text}, {"surface_terrain", type number}}, "fr-FR"),
+		    Codes = Table.TransformColumns(Types, {{"code_departement", each if _ = null then null else Text.PadStart(_, 2, "0"), type text}, {"code_commune", each if _ = null then null else Text.PadStart(_, 3, "0"), type text}, {"code_postal", each if _ = null then null else Text.PadStart(_, 5, "0"), type text}}),
+		    CodeType0 = Table.ReplaceValue(Codes, null, "0", Replacer.ReplaceValue, {"code_type_local"}),
+		    CodeType1 = Table.ReplaceValue(CodeType0, "", "0", Replacer.ReplaceValue, {"code_type_local"}),
+		    TypeLocal0 = Table.ReplaceValue(CodeType1, null, "Non renseigne (terrain / dependance)", Replacer.ReplaceValue, {"type_local"}),
+		    TypeLocal1 = Table.ReplaceValue(TypeLocal0, "", "Non renseigne (terrain / dependance)", Replacer.ReplaceValue, {"type_local"})
+		in
+		    TypeLocal1
+	lineageTag: a0ada76c-290f-4fcd-a55d-6580e3753daa
+
+expression q_fait_mutation =
+		let
+		    Base = DVF_Brut,
+		    Filtre = Table.SelectRows(Base, each [date_mutation] <> null and [code_departement] <> null and [code_departement] <> ""),
+		    CleTemps = Table.AddColumn(Filtre, "cle_temps", each Date.Year([date_mutation]) * 10000 + Date.Month([date_mutation]) * 100 + Date.Day([date_mutation]), Int64.Type),
+		    CleCommune = Table.AddColumn(CleTemps, "cle_commune", each [code_departement] & [code_commune], type text),
+		    CleNature = Table.AddColumn(CleCommune, "cle_nature_mutation", each [nature_mutation], type text),
+		    CleType = Table.AddColumn(CleNature, "cle_type_local", each [code_type_local], type text),
+		    CleCulture = Table.AddColumn(CleType, "cle_nature_culture", each [nature_culture] & "-" & (if [nature_culture_speciale] = null or [nature_culture_speciale] = "" then "0" else [nature_culture_speciale]), type text),
+		    CleMutation = Table.AddColumn(CleCulture, "cle_mutation", each Text.Combine({Text.From([cle_temps]), [cle_commune], [cle_nature_mutation], (if [valeur_fonciere] = null then "null" else Number.ToText([valeur_fonciere]))}, "|"), type text),
+		    Final = Table.SelectColumns(CleMutation, {"cle_mutation", "cle_temps", "cle_commune", "cle_nature_mutation", "cle_type_local", "cle_nature_culture", "no_voie", "btq", "code_voie", "identifiant_local", "valeur_fonciere", "surface_reelle_bati", "nombre_pieces_principales", "surface_terrain", "nombre_lots"})
+		in
+		    Final
+	lineageTag: a2b57d3d-62ef-4749-a42c-d30260ca23e2
+
+expression q_dim_temps =
+		let
+		    Base = DVF_Brut,
+		    Dates = Table.Distinct(Table.SelectColumns(Base, {"date_mutation"})),
+		    Filtre = Table.SelectRows(Dates, each [date_mutation] <> null),
+		    Cle = Table.AddColumn(Filtre, "cle_temps", each Date.Year([date_mutation]) * 10000 + Date.Month([date_mutation]) * 100 + Date.Day([date_mutation]), Int64.Type),
+		    Annee = Table.AddColumn(Cle, "annee", each Date.Year([date_mutation]), Int64.Type),
+		    Trimestre = Table.AddColumn(Annee, "trimestre", each Date.QuarterOfYear([date_mutation]), Int64.Type),
+		    Mois = Table.AddColumn(Trimestre, "mois", each Date.Month([date_mutation]), Int64.Type),
+		    Jour = Table.AddColumn(Mois, "jour_semaine", each Date.DayOfWeek([date_mutation], Day.Monday) + 1, Int64.Type),
+		    Renomme = Table.RenameColumns(Jour, {{"date_mutation", "date"}}),
+		    Final = Table.SelectColumns(Renomme, {"cle_temps", "date", "annee", "trimestre", "mois", "jour_semaine"}),
+		    Trie = Table.Sort(Final, {{"cle_temps", Order.Ascending}})
+		in
+		    Trie
+	lineageTag: 612d63f4-0e2e-422b-8bb3-2038b1916dde
+
+expression q_dim_departement =
+		let
+		    Base = DVF_Brut,
+		    Cols = Table.SelectColumns(Base, {"code_departement"}),
+		    Distinct = Table.Distinct(Cols),
+		    Filtre = Table.SelectRows(Distinct, each [code_departement] <> null and [code_departement] <> ""),
+		    Renomme = Table.RenameColumns(Filtre, {{"code_departement", "cle_departement"}}),
+		    Code = Table.AddColumn(Renomme, "code_departement", each [cle_departement], type text),
+		    Final = Table.SelectColumns(Code, {"cle_departement", "code_departement"}),
+		    Trie = Table.Sort(Final, {{"cle_departement", Order.Ascending}})
+		in
+		    Trie
+	lineageTag: 4b666445-2b81-4e46-81ef-3b551362f806
+
+expression q_dim_commune =
+		let
+		    Base = DVF_Brut,
+		    Cols = Table.SelectColumns(Base, {"code_departement", "code_commune", "commune", "code_postal"}),
+		    Filtre = Table.SelectRows(Cols, each [code_departement] <> null and [code_departement] <> "" and [code_commune] <> null and [code_commune] <> "" and [commune] <> null and [commune] <> ""),
+		    Cle = Table.AddColumn(Filtre, "cle_commune", each Text.Combine({[code_departement], [code_commune]}, ""), type text),
+		    Distinct = Table.Distinct(Cle, {"cle_commune"}),
+		    Final = Table.SelectColumns(Distinct, {"cle_commune", "code_departement", "code_commune", "commune", "code_postal"}),
+		    Trie = Table.Sort(Final, {{"cle_commune", Order.Ascending}})
+		in
+		    Trie
+	lineageTag: 6d300584-e51e-43e6-8c3b-2075177b170c
+
+expression q_dim_nature_mutation =
+		let
+		    Base = DVF_Brut,
+		    Cols = Table.SelectColumns(Base, {"nature_mutation"}),
+		    Distinct = Table.Distinct(Cols),
+		    Filtre = Table.SelectRows(Distinct, each [nature_mutation] <> null and [nature_mutation] <> ""),
+		    Cle = Table.AddColumn(Filtre, "cle_nature_mutation", each [nature_mutation], type text),
+		    Final = Table.SelectColumns(Cle, {"cle_nature_mutation", "nature_mutation"}),
+		    Trie = Table.Sort(Final, {{"cle_nature_mutation", Order.Ascending}})
+		in
+		    Trie
+	lineageTag: 201000e1-cfae-40f8-b9b8-b31bad40e960
+
+expression q_dim_nature_culture =
+		let
+		    Base = DVF_Brut,
+		    Cols = Table.SelectColumns(Base, {"nature_culture", "nature_culture_speciale"}),
+		    Distinct = Table.Distinct(Cols),
+		    Cle = Table.AddColumn(Distinct, "cle_nature_culture", each Text.Combine({(if [nature_culture] = null then "" else [nature_culture]), "-", (if [nature_culture_speciale] = null or [nature_culture_speciale] = "" then "0" else [nature_culture_speciale])}, ""), type text),
+		    SansDoublon = Table.Distinct(Cle, {"cle_nature_culture"}),
+		    Renomme = Table.RenameColumns(SansDoublon, {{"nature_culture", "code_nature_culture"}}),
+		    Libelle = Table.AddColumn(Renomme, "nature_culture", each [code_nature_culture], type text),
+		    Final = Table.SelectColumns(Libelle, {"cle_nature_culture", "code_nature_culture", "nature_culture", "nature_culture_speciale"}),
+		    Trie = Table.Sort(Final, {{"cle_nature_culture", Order.Ascending}})
+		in
+		    Trie
+	lineageTag: 3b8a08b3-3b5f-47cc-9d56-7b1e8eb3abf4
+
+expression q_dim_type_local =
+		let
+		    Base = DVF_Brut,
+		    Cols = Table.SelectColumns(Base, {"code_type_local", "type_local"}),
+		    Distinct = Table.Distinct(Cols),
+		    Filtre = Table.SelectRows(Distinct, each [code_type_local] <> null and [code_type_local] <> ""),
+		    Cle = Table.AddColumn(Filtre, "cle_type_local", each [code_type_local], type text),
+		    Categorie = Table.AddColumn(Cle, "cle_categorie_local", each if [code_type_local] = "1" or [code_type_local] = "2" then "1" else if [code_type_local] = "3" then "3" else if [code_type_local] = "4" then "4" else "0", type text),
+		    Final = Table.SelectColumns(Categorie, {"cle_type_local", "code_type_local", "type_local", "cle_categorie_local"}),
+		    Trie = Table.Sort(Final, {{"cle_type_local", Order.Ascending}})
+		in
+		    Trie
+	lineageTag: fec14999-464f-4dd1-a044-7e3aeeafae13
+
+expression q_dim_categorie_local =
+		let
+		    Source = Table.FromRows(
+		        {
+		            {"0", "Terrain / non renseigne"},
+		            {"1", "Habitation"},
+		            {"2", "Habitation"},
+		            {"3", "Immeuble collectif"},
+		            {"4", "Professionnel / commercial"}
+		        },
+		        {"cle_categorie_local", "categorie_local"}
+		    ),
+		    Types = Table.TransformColumnTypes(Source, {{"cle_categorie_local", type text}, {"categorie_local", type text}}),
+		    Trie = Table.Sort(Types, {{"cle_categorie_local", Order.Ascending}})
+		in
+		    Trie
+	lineageTag: 2a225324-9342-42bf-be08-dec49e5fee86
+
+expression q_fait_agrege =
+		let
+		    Fait = q_fait_mutation,
+		    Cols = Table.SelectColumns(Fait, {"cle_mutation", "cle_temps", "cle_commune", "cle_nature_mutation", "valeur_fonciere", "surface_reelle_bati", "nombre_pieces_principales"}),
+		    Mutations = Table.Distinct(Cols, {"cle_mutation"}),
+		    GroupeMut = Table.Group(Mutations, {"cle_temps", "cle_commune", "cle_nature_mutation"}, {{"nombre_de_mutations", each Table.RowCount(_), Int64.Type}, {"valeur_fonciere_totale", each List.Sum([valeur_fonciere]), type number}}),
+		    GroupeLoc = Table.Group(Cols, {"cle_temps", "cle_commune", "cle_nature_mutation"}, {{"nombre_de_locaux", each Table.RowCount(_), Int64.Type}, {"surface_batie_totale", each List.Sum([surface_reelle_bati]), type number}, {"nombre_pieces_total", each List.Sum([nombre_pieces_principales]), Int64.Type}}),
+		    Jointure = Table.NestedJoin(GroupeMut, {"cle_temps", "cle_commune", "cle_nature_mutation"}, GroupeLoc, {"cle_temps", "cle_commune", "cle_nature_mutation"}, "Loc", JoinKind.LeftOuter),
+		    Etendu = Table.ExpandTableColumn(Jointure, "Loc", {"nombre_de_locaux", "surface_batie_totale", "nombre_pieces_total"}),
+		    PrixM2 = Table.AddColumn(Etendu, "prix_moyen_m2", each if [surface_batie_totale] = null or [surface_batie_totale] = 0 then null else [valeur_fonciere_totale] / [surface_batie_totale], type number),
+		    Final = Table.SelectColumns(PrixM2, {"cle_temps", "cle_commune", "cle_nature_mutation", "nombre_de_mutations", "nombre_de_locaux", "valeur_fonciere_totale", "surface_batie_totale", "nombre_pieces_total", "prix_moyen_m2"})
+		in
+		    Final
+	lineageTag: d98904cd-0e61-4925-b16b-30e9ba157a3a
+
