@@ -71,6 +71,10 @@ Améliorations facultatives : segment sur `dim_type_local[type_local]` ou
 `dim_nature_mutation[nature_mutation]`, tri décroissant sur les mutations,
 ou remplacer la colonne `annee` par `trimestre` pour un croisé intra-annuel.
 
+> Le **total en colonne** est désactivé sur les 6 matrices (`subTotals.columnSubtotals
+> = false`) : la page étant filtrée sur une seule année, il répétait exactement les
+> mêmes colonnes. La **ligne Total du bas** est conservée (`rowSubtotals = true`).
+
 ---
 
 ## 4. Chiffres de contrôle (mesurés sur le modèle)
