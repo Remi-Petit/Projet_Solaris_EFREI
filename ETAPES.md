@@ -184,3 +184,21 @@ Il faut donc commencer par demander :
       une seule source de vérité
 - [ ] Désactiver *Date/heure automatique* (`Fichier → Options → Chargement des
       données`) : `dim_temps` est déjà une table de dates
+
+---
+
+## 9. Comment le rapport de remise est produit
+
+- `Rapport_Projet_Solaris_G1.docx` : document mis en forme par un script Python
+  (`python-docx`), **entièrement en Times New Roman** (police de base, styles du
+  document, thème Word, blocs de code, tableaux). Le sommaire est **statique** :
+  chaque section y figure avec son numéro de page réel ; il ne se met pas à jour
+  tout seul, il faut regénérer le document si le texte change.
+- `Rapport_Projet_Solaris_G1.pdf` : export **LibreOffice**
+  (`soffice --headless --convert-to pdf`). L'export PDF de Word est bloqué sur ce
+  poste (il reste suspendu, même sur un document vide) : LibreOffice produit le
+  même rendu, avec les polices Times New Roman conservées.
+- Le sommaire est calculé en deux temps : génération du document, export PDF,
+  relevé de la page réelle de chaque titre, puis génération définitive.
+- Le schéma en flocon est dessiné à part (matplotlib, figure 1) et les captures
+  des matrices proviennent de Power BI Desktop (figures 2 et 3).
