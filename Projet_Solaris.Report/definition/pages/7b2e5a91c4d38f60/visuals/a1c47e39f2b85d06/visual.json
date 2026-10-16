@@ -99,28 +99,6 @@
         }
       }
     },
-    "objects": {
-      "subTotals": [
-        {
-          "properties": {
-            "columnSubtotals": {
-              "expr": {
-                "Literal": {
-                  "Value": "false"
-                }
-              }
-            },
-            "rowSubtotals": {
-              "expr": {
-                "Literal": {
-                  "Value": "true"
-                }
-              }
-            }
-          }
-        }
-      ]
-    },
     "drillFilterOtherVisuals": true
   }
 }
