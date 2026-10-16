@@ -396,9 +396,10 @@ dans le projet `Projet_Solaris.pbip`**.
 2. **Accueil → Actualiser** : Power Query relit les fichiers `ValeursFoncieres-*.txt`
    et reconstruit les 10 tables. Inutile tant que la source n'a pas changé : les
    données sont déjà dans le cache du projet.
-3. Les fichiers source doivent rester à cet emplacement :
-   `C:\Users\Lenovo\Desktop\PowerBi\Projet_Solaris\ValeursFoncieres-AAAA.txt`.
-   Le chemin du dossier est codé dans la requête `DVF_Brut`.
+3. Les fichiers source doivent rester dans le dossier du projet, nommés
+   `ValeursFoncieres-AAAA.txt`. Le chemin de ce dossier est codé dans l'étape
+   `Dossier` de la requête `DVF_Brut` : si le projet est déplacé sur un autre
+   poste, il faut mettre ce chemin à jour avant d'actualiser.
 
 > Un rafraîchissement complet relit ≈ 920 Mo (2024 + 2025) et reconstruit les
 > agrégats : comptez une dizaine de minutes.
