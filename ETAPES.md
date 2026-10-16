@@ -21,6 +21,7 @@
 | Page « Marché immobilier 2024 » | ✅ matrice commune × année |
 | Page « Marché par région et département 2024 » | ✅ matrices région et département |
 | Chiffres de contrôle | ✅ vérifiés (voir §4) |
+| Rapport de remise | ✅ `Rapport_Projet_Solaris_G1.docx` + `.pdf` (14 pages, captures des matrices) |
 | Proposition de la source au professeur | ✅ faite (à confirmer si retour attendu) |
 
 **Historique.** Le modèle construit le 2 octobre a été perdu (fenêtre Power BI
@@ -33,7 +34,8 @@ puisque tout (modèle, requêtes, rapport) est en texte dans le dossier.
 ## 2. Ouvrir / reprendre le projet
 
 1. Ouvrir `Projet_Solaris.pbip` (double-clic, ou *Fichier → Ouvrir*).
-2. Le rapport s'affiche sur la page **« Marché immobilier 2024-2025 »**.
+2. Le rapport s'affiche sur la page **« Marché immobilier 2025 »** (les trois autres
+   pages sont accessibles par les onglets en bas de la zone de dessin).
 3. **Accueil → Actualiser** uniquement si les fichiers source ont changé.
 
 Structure du dossier :
@@ -92,10 +94,11 @@ autres isolent chaque marché) :
 | `Prix moyen m2 habitation` (maisons + appartements) | 2 494,36 € | 2 540,76 € | 2 518,95 € |
 | `Prix moyen m2 terrain` | 17,88 € | 18,60 € | 18,25 € |
 
-> Une cellule vide dans `Prix moyen m2` est **normale** : la surface bâtie n'existe
-> pas pour les terrains et les dépendances (67 % des lignes). Ces communes ont
-> souvent un `Prix moyen m2 terrain` renseigné à la place. Détail dans
-> `MODELE_DATAMART.md` §3.
+> Une cellule vide dans `Prix moyen m2` est **normale** : la surface bâtie est
+> absente ou nulle pour les terrains et les dépendances (4 855 362 lignes, 67 %).
+> En 2025, 2 056 communes sur 31 148 sont dans ce cas ; 794 644 mutations (31 %)
+> ne comportent aucun bien dont la surface bâtie soit renseignée et représentent
+> 105,6 Md€ (17,5 % de la valeur). Détail dans `MODELE_DATAMART.md` §3.
 
 Par région :
 
@@ -160,10 +163,13 @@ Il faut donc commencer par demander :
 
 ## 7. Reste à faire avant la remise
 
-- [ ] **Descriptif du cas métier** → déjà rédigé, `MODELE_DATAMART.md` §6
-- [ ] **Justification des transformations** → déjà rédigé, `MODELE_DATAMART.md` §4
-- [ ] **Données source** → les `.txt` à la racine (non versionnés, trop volumineux)
-- [ ] **Fichier du projet** → `Projet_Solaris.pbip` ✅
+- [x] **Rapport de remise** → `Rapport_Projet_Solaris_G1.docx` + `.pdf` : cas métier,
+      données source, schéma en flocon, transformations, mesures DAX, captures des
+      matrices, chiffres de contrôle, limites, annexes
+- [x] **Descriptif du cas métier** → rapport §1 et §9 ; `MODELE_DATAMART.md` §6
+- [x] **Justification des transformations** → rapport §4.2 ; `MODELE_DATAMART.md` §4
+- [x] **Données source** → les `.txt` à la racine (non versionnés, trop volumineux)
+- [x] **Fichier du projet** → `Projet_Solaris.pbip`
 - [ ] (facultatif) Ajouter un segment à la page 1
 
 ---

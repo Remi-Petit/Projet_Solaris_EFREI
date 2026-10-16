@@ -242,15 +242,17 @@ Contrôle de cohérence entre les deux tables de faits :
 ### Pourquoi certains prix au m² sont vides
 
 `Prix moyen m2` divise la valeur par la **surface bâtie**. Or la source ne renseigne
-cette surface **que pour les maisons et les appartements** :
+cette surface **que pour les maisons et les appartements** (les autres lignes portent
+une surface bâtie absente ou nulle) :
 
-| Type de local | Lignes | Dont sans surface bâtie |
+| Type de local | Lignes | Dont surface bâtie absente ou nulle |
 |---|---:|---:|
 | Non renseigné (terrain / dépendance) | 2 942 044 | **2 942 044 (100 %)** |
 | Dépendance | 1 899 893 | **1 899 893 (100 %)** |
-| Maison | 1 168 634 | 53 |
+| Local industriel / commercial | 226 931 | 13 224 (5,8 %) |
 | Appartement | 977 258 | 148 |
-| Local industriel / commercial | 226 931 | 13 224 |
+| Maison | 1 168 634 | 53 |
+| **Total** | **7 214 760** | **4 855 362 (67 %)** |
 
 **4 855 362 lignes (67 %) n'ont donc pas de surface bâtie** : ce sont les terrains
 et les dépendances (caves, garages, parkings…). Dans une commune où seuls des
@@ -258,14 +260,21 @@ terrains ou des dépendances se sont vendus dans l'année, la division n'a pas d
 dénominateur : DAX `DIVIDE` renvoie **vide**, d'où la cellule blanche. En 2025,
 2 056 communes sur 31 148 (6,6 %) sont dans ce cas.
 
-Ces lignes représentent malgré tout **441 Md€, soit 73 % de la valeur foncière**,
-d'où deux mesures dédiées pour ne pas mélanger les genres :
+Vue à l'échelle des mutations : **794 644 mutations (31 %) ne comportent aucun bien
+dont la surface bâtie soit renseignée** ; elles représentent **105,6 Md€, soit 17,5 %
+de la valeur foncière** échangée sur 2024-2025.
+
+Deux mesures dédiées évitent de mélanger les genres :
 
 | Mesure | Périmètre | Valeur 2025 |
 |---|---|---:|
 | `Prix moyen m2` | tout (terrains compris au numérateur) | 2 187,23 € |
 | `Prix moyen m2 habitation` | maisons + appartements uniquement | **2 540,76 €** |
 | `Prix moyen m2 terrain` | terrains (valeur / surface de terrain) | **18,60 €** |
+
+> ⚠️ Les valeurs par **type de bien** ne s'additionnent pas : une mutation portant sur
+> plusieurs biens voit sa valeur comptée dans chacun de ces types (environ 1 031 Md€
+> au total, contre 605 Md€ au niveau national). À lire type par type, jamais en somme.
 
 ---
 
