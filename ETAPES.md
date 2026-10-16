@@ -16,8 +16,10 @@
 | Requêtes Power Query (ETL) | ✅ 13 requêtes M |
 | Données chargées et à jour | ✅ 7 214 760 + 1 614 973 lignes |
 | Analyse par **région / département / commune** | ✅ `dim_region` → `dim_departement` → `dim_commune` |
-| Page 1 : matrice commune × année | ✅ « Marché immobilier 2024-2025 » |
-| Page 2 : matrice région + département | ✅ « Marché par région et département » |
+| Page « Marché immobilier 2025 » | ✅ matrice commune × année |
+| Page « Marché par région et département 2025 » | ✅ matrices région et département |
+| Page « Marché immobilier 2024 » | ✅ matrice commune × année |
+| Page « Marché par région et département 2024 » | ✅ matrices région et département |
 | Chiffres de contrôle | ✅ vérifiés (voir §4) |
 | Proposition de la source au professeur | ✅ faite (à confirmer si retour attendu) |
 
@@ -50,26 +52,24 @@ Projet_Solaris/
 
 ---
 
-## 3. Les deux matrices du rapport
+## 3. Les quatre pages du rapport
 
-**Page 1 « Marché immobilier 2024-2025 »** (table de faits détaillée) :
+Une page par **année** et par **table de faits**. Chaque page porte un **filtre de
+page** sur `dim_temps[annee]` : tout ce qui s'y trouve est déjà restreint à l'année.
 
-| Zone | Champ |
-|---|---|
-| Lignes | `dim_commune[commune]` |
-| Colonnes | `dim_temps[annee]` (2024 et 2025) |
-| Valeurs | `[Nombre de mutations]`, `[Valeur fonciere totale]`, `[Prix moyen m2]` |
+| Page | Table de faits | Lignes | Colonnes | Valeurs |
+|---|---|---|---|---|
+| Marché immobilier 2025 | détaillée | `dim_commune[commune]` | `dim_temps[annee]` | `[Nombre de mutations]`, `[Valeur fonciere totale]`, `[Prix moyen m2]` |
+| Marché par région et département 2025 | agrégée | `dim_region[nom_region]` | `dim_temps[annee]` | `[Nb mutations agrege]`, `[Valeur agregee]`, `[Prix moyen m2 agrege]` |
+| Marché immobilier 2024 | détaillée | `dim_commune[commune]` | `dim_temps[annee]` | idem 2025 |
+| Marché par région et département 2024 | agrégée | `dim_region[nom_region]` | `dim_temps[annee]` | idem 2025 |
 
-**Page 2 « Marché par région et département »** (table de faits agrégée) :
-
-| Zone | Champ |
-|---|---|
-| Lignes | `dim_region[nom_region]` — puis `dim_departement[nom_departement]` dans le second visuel |
-| Colonnes | `dim_temps[annee]` |
-| Valeurs | `[Nb mutations agrege]`, `[Valeur agregee]`, `[Prix moyen m2 agrege]` |
+Les pages « par région et département » ont un **second visuel** qui descend au
+département (`dim_departement[nom_departement]`), avec les mêmes mesures.
 
 Améliorations facultatives : segment sur `dim_type_local[type_local]` ou
-`dim_nature_mutation[nature_mutation]`, tri décroissant sur les mutations.
+`dim_nature_mutation[nature_mutation]`, tri décroissant sur les mutations,
+ou remplacer la colonne `annee` par `trimestre` pour un croisé intra-annuel.
 
 ---
 

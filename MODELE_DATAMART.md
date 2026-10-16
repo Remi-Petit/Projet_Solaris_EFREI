@@ -301,28 +301,21 @@ prix, et comment le prix au m² évolue d'une année sur l'autre.
 
 ### Tableaux croisés (matrices) réalisés
 
-Deux pages dans le rapport du projet `Projet_Solaris.pbip`, une par table de faits :
+Quatre pages dans le rapport du projet `Projet_Solaris.pbip` : **une page par
+année et par table de faits**. Chaque page porte un **filtre de page** sur
+`dim_temps[annee]`, donc toutes les analyses y sont déjà restreintes à son année.
 
-**Page 1 « Marché immobilier 2024-2025 »** — table de faits détaillée :
+| Page | Table de faits | Lignes | Colonnes | Valeurs |
+|---|---|---|---|---|
+| **Marché immobilier 2025** | détaillée (datawarehouse) | `dim_commune[commune]` | `dim_temps[annee]` | `[Nombre de mutations]`, `[Valeur fonciere totale]`, `[Prix moyen m2]` |
+| **Marché par région et département 2025** | agrégée (datamart) | `dim_region[nom_region]` | `dim_temps[annee]` | `[Nb mutations agrege]`, `[Valeur agregee]`, `[Prix moyen m2 agrege]` |
+| **Marché immobilier 2024** | détaillée (datawarehouse) | `dim_commune[commune]` | `dim_temps[annee]` | idem 2025 |
+| **Marché par région et département 2024** | agrégée (datamart) | `dim_region[nom_region]` | `dim_temps[annee]` | idem 2025 |
 
-| | Colonne |
-|---|---|
-| **Lignes** | `dim_commune[commune]` |
-| **Colonnes** | `dim_temps[annee]` (2024 et 2025) |
-| **Valeurs** | `[Nombre de mutations]`, `[Valeur fonciere totale]`, `[Prix moyen m2]` |
-
-**Page 2 « Marché par région et département »** — table de faits agrégée (datamart) :
-
-| | Colonne |
-|---|---|
-| **Lignes** | `dim_region[nom_region]` |
-| **Colonnes** | `dim_temps[annee]` |
-| **Valeurs** | `[Nb mutations agrege]`, `[Valeur agregee]`, `[Prix moyen m2 agrege]` |
-
-Le second visuel de la page 2 descend au **département** (`dim_departement[nom_departement]`),
-avec les mêmes mesures. La hiérarchie **région → département → commune** est
-exploitable directement dans un visuel : filtrer une région filtre ses
-départements et ses communes.
+Les deux pages « par région et département » contiennent un **second visuel** qui
+descend au département (`dim_departement[nom_departement]`), avec les mêmes mesures.
+La hiérarchie **région → département → commune** est exploitable directement dans un
+visuel : filtrer une région filtre ses départements et ses communes.
 
 Résultats de contrôle obtenus sur le modèle (2024-2025) :
 

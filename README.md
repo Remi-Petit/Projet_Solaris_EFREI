@@ -16,7 +16,8 @@ Le datamart (1 table de faits détaillée + 1 table de faits agrégée + 8 dimen
 est construit **intégralement en Power Query**, dans le projet `Projet_Solaris.pbip`.
 
 1. Ouvrir `Projet_Solaris.pbip` dans Power BI Desktop
-2. Le rapport s'affiche sur la page « Marché immobilier 2024-2025 » (la matrice)
+2. Le rapport s'ouvre sur la page « Marché immobilier 2025 » (la matrice) ; les
+   trois autres pages sont accessibles par les onglets du bas
 3. **Accueil → Actualiser** seulement si les fichiers source ont changé :
    les données sont déjà dans le cache du projet (`124 Mo`)
 

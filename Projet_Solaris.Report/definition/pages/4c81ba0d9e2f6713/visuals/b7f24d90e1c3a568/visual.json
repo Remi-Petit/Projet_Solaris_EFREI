@@ -1,0 +1,178 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.12.0/schema.json",
+  "name": "b7f24d90e1c3a568",
+  "position": {
+    "x": 20,
+    "y": 20,
+    "z": 0,
+    "height": 680,
+    "width": 1240,
+    "tabOrder": 0
+  },
+  "visual": {
+    "visualType": "pivotTable",
+    "query": {
+      "queryState": {
+        "Columns": {
+          "projections": [
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "dim_temps"
+                    }
+                  },
+                  "Property": "annee"
+                }
+              },
+              "queryRef": "dim_temps.annee",
+              "nativeQueryRef": "annee",
+              "active": true
+            }
+          ]
+        },
+        "Rows": {
+          "projections": [
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "dim_commune"
+                    }
+                  },
+                  "Property": "commune"
+                }
+              },
+              "queryRef": "dim_commune.commune",
+              "nativeQueryRef": "commune",
+              "active": true
+            }
+          ]
+        },
+        "Values": {
+          "projections": [
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "fait_mutation"
+                    }
+                  },
+                  "Property": "Nombre de mutations"
+                }
+              },
+              "queryRef": "fait_mutation.Nombre de mutations",
+              "nativeQueryRef": "Nombre de mutations"
+            },
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "fait_mutation"
+                    }
+                  },
+                  "Property": "Valeur fonciere totale"
+                }
+              },
+              "queryRef": "fait_mutation.Valeur fonciere totale",
+              "nativeQueryRef": "Valeur fonciere totale"
+            },
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "fait_mutation"
+                    }
+                  },
+                  "Property": "Prix moyen m2"
+                }
+              },
+              "queryRef": "fait_mutation.Prix moyen m2",
+              "nativeQueryRef": "Prix moyen m2"
+            }
+          ]
+        }
+      }
+    },
+    "drillFilterOtherVisuals": true
+  },
+  "filterConfig": {
+    "filters": [
+      {
+        "name": "2a1b20a1d142fb3bb3e2",
+        "field": {
+          "Column": {
+            "Expression": {
+              "SourceRef": {
+                "Entity": "dim_commune"
+              }
+            },
+            "Property": "commune"
+          }
+        },
+        "type": "Categorical"
+      },
+      {
+        "name": "6532144ee0ac70508090",
+        "field": {
+          "Column": {
+            "Expression": {
+              "SourceRef": {
+                "Entity": "dim_temps"
+              }
+            },
+            "Property": "annee"
+          }
+        },
+        "type": "Advanced"
+      },
+      {
+        "name": "22f1db65cb3180c0f5f5",
+        "field": {
+          "Measure": {
+            "Expression": {
+              "SourceRef": {
+                "Entity": "fait_mutation"
+              }
+            },
+            "Property": "Nombre de mutations"
+          }
+        },
+        "type": "Advanced"
+      },
+      {
+        "name": "7a6531770995c0c9ec45",
+        "field": {
+          "Measure": {
+            "Expression": {
+              "SourceRef": {
+                "Entity": "fait_mutation"
+              }
+            },
+            "Property": "Valeur fonciere totale"
+          }
+        },
+        "type": "Advanced"
+      },
+      {
+        "name": "53ca415b6252af34f315",
+        "field": {
+          "Measure": {
+            "Expression": {
+              "SourceRef": {
+                "Entity": "fait_mutation"
+              }
+            },
+            "Property": "Prix moyen m2"
+          }
+        },
+        "type": "Advanced"
+      }
+    ]
+  }
+}

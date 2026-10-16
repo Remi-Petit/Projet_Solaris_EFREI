@@ -1,0 +1,104 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.12.0/schema.json",
+  "name": "f28b6914c0d3e7a5",
+  "position": {
+    "x": 20,
+    "y": 430,
+    "z": 0,
+    "height": 270,
+    "width": 1240,
+    "tabOrder": 1
+  },
+  "visual": {
+    "visualType": "pivotTable",
+    "query": {
+      "queryState": {
+        "Rows": {
+          "projections": [
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "dim_departement"
+                    }
+                  },
+                  "Property": "nom_departement"
+                }
+              },
+              "queryRef": "dim_departement.nom_departement",
+              "nativeQueryRef": "nom_departement",
+              "active": true
+            }
+          ]
+        },
+        "Columns": {
+          "projections": [
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "dim_temps"
+                    }
+                  },
+                  "Property": "annee"
+                }
+              },
+              "queryRef": "dim_temps.annee",
+              "nativeQueryRef": "annee",
+              "active": true
+            }
+          ]
+        },
+        "Values": {
+          "projections": [
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "fait_marche_agrege"
+                    }
+                  },
+                  "Property": "Nb mutations agrege"
+                }
+              },
+              "queryRef": "fait_marche_agrege.Nb mutations agrege",
+              "nativeQueryRef": "Nb mutations agrege"
+            },
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "fait_marche_agrege"
+                    }
+                  },
+                  "Property": "Valeur agregee"
+                }
+              },
+              "queryRef": "fait_marche_agrege.Valeur agregee",
+              "nativeQueryRef": "Valeur agregee"
+            },
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "fait_marche_agrege"
+                    }
+                  },
+                  "Property": "Prix moyen m2 agrege"
+                }
+              },
+              "queryRef": "fait_marche_agrege.Prix moyen m2 agrege",
+              "nativeQueryRef": "Prix moyen m2 agrege"
+            }
+          ]
+        }
+      }
+    },
+    "drillFilterOtherVisuals": true
+  }
+}
